@@ -1,0 +1,13 @@
+node_modules/
+npm-debug.log*
+*.log
+.env
+.env.*
+config.json
+/etc/wireguard/server/privatekey
+/etc/wireguard/server/publickey
+/etc/vpn-manager/config.json
+/etc/wireguard/clients/*.conf
+/etc/wireguard/clients/*.png
+*.conf
+*.png

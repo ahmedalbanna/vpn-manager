@@ -1,0 +1,22 @@
+[Unit]
+Description=VPN Manager Web UI
+After=network.target wg-quick@wg0.service
+Wants=wg-quick@wg0.service
+
+[Service]
+Type=simple
+User=vpn-manager
+Group=vpn-manager
+WorkingDirectory=/opt/vpn-manager
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=MANAGEMENT_PORT=8090
+Environment=WG_INTERFACE=wg0
+Environment=WG_CONF=/etc/wireguard/wg0.conf
+Environment=CLIENTS_DIR=/etc/wireguard/clients
+Environment=CONFIG_DIR=/etc/vpn-manager
+
+[Install]
+WantedBy=multi-user.target

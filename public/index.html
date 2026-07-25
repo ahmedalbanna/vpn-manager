@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VPN Manager</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <!-- Login Screen -->
+  <div id="login-screen" class="screen">
+    <div class="card login-card">
+      <h1>🛡️ VPN Manager</h1>
+      <p>WireGuard management panel</p>
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="login-user">Username</label>
+          <input id="login-user" type="text" placeholder="admin" required />
+        </div>
+        <div class="form-group">
+          <label for="login-pass">Password</label>
+          <input id="login-pass" type="password" placeholder="Enter password" required />
+        </div>
+        <div id="login-error" class="error-msg" hidden></div>
+        <button type="submit" class="btn primary">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="dashboard-screen" class="screen hidden">
+    <nav class="topbar">
+      <span class="brand">🛡️ VPN Manager</span>
+      <div class="topbar-actions">
+        <span id="topbar-status" class="badge"></span>
+        <button id="btn-logout" class="btn small ghost">Logout</button>
+      </div>
+    </nav>
+
+    <main class="main-grid">
+      <!-- VPN Control Card -->
+      <section class="card">
+        <h2>VPN Connection</h2>
+        <div class="vpn-control">
+          <div class="toggle-row">
+            <span>WireGuard</span>
+            <label class="switch">
+              <input type="checkbox" id="vpn-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div id="vpn-detail" class="vpn-detail"></div>
+          <div id="vpn-actions" class="btn-row">
+            <button id="btn-start" class="btn primary">Start</button>
+            <button id="btn-stop" class="btn danger">Stop</button>
+            <button id="btn-restart" class="btn">Restart</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Status Card -->
+      <section class="card">
+        <h2>Status</h2>
+        <div id="status-info" class="status-grid"></div>
+      </section>
+
+      <!-- Services Card -->
+      <section class="card span-2">
+        <h2>Exposed Services</h2>
+        <p class="help-text">Toggle which services are accessible through the VPN.</p>
+        <div id="services-list" class="service-list"></div>
+        <button id="btn-save-services" class="btn primary">Save</button>
+      </section>
+
+      <!-- Clients Card -->
+      <section class="card span-2">
+        <h2>Clients</h2>
+        <div id="clients-list" class="clients-list"></div>
+        <div class="btn-row" style="margin-top:12px;">
+          <button id="btn-add-client" class="btn primary">+ Add Client</button>
+        </div>
+      </section>
+
+      <!-- Settings Card -->
+      <section class="card span-2">
+        <h2>Settings</h2>
+        <form id="settings-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Admin Username</label>
+              <input name="adminUser" type="text" readonly />
+            </div>
+            <div class="form-group">
+              <label>Reset Admin Password</label>
+              <input name="adminPassword" type="password" placeholder="New password (min 6 chars, leave blank to keep)" minlength="6" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>VPN Port</label>
+              <input name="vpnPort" type="number" min="1024" max="65535" />
+            </div>
+            <div class="form-group">
+              <label>VPN Subnet</label>
+              <input name="vpnSubnet" type="text" placeholder="10.0.0.0/24" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Server IP</label>
+              <input name="serverIp" type="text" />
+            </div>
+            <div class="form-group">
+              <label>Management Port</label>
+              <input name="managementPort" type="number" min="1024" max="65535" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="toggle-row">
+              <span>Allow LAN Access (VPN clients can reach local network)</span>
+              <input type="checkbox" name="allowLanAccess" />
+            </label>
+          </div>
+          <div class="form-group" id="lan-subnet-group" style="display:none;">
+            <label>Local LAN Subnet</label>
+            <input name="localLanSubnet" type="text" placeholder="192.168.1.0/24" />
+          </div>
+          <button type="submit" class="btn primary">Save Settings</button>
+        </form>
+      </section>
+
+      <!-- Logs Card -->
+      <section class="card span-2">
+        <h2>Logs</h2>
+        <button id="btn-refresh-logs" class="btn small">Refresh</button>
+        <pre id="logs-output" class="logs-area"></pre>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Modal for adding client -->
+<div id="client-modal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Add Client</h3>
+    <form id="add-client-form">
+      <div class="form-group">
+        <label>Client Name</label>
+        <input name="clientName" type="text" placeholder="e.g. My Laptop" required />
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn primary">Create</button>
+        <button type="button" id="btn-modal-close" class="btn ghost">Cancel</button>
+      </div>
+    </form>
+    <div id="client-result" class="client-result"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
